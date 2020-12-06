@@ -1,0 +1,71 @@
+       local ShowerLib = loadstring(game:HttpGet("https://fluxteam.xyz/scripts/others/ShowerHeadLibrary.lua"))()
+       local Window = ShowerLib:CreateWindow("F"); --Clicking this will make it rotate.
+       local HomePage = Window:Section("Home")
+       local MiscPage = Window:Section("Misc")
+       local CreditPage = Window:Section("Credits")
+
+-- Home Page
+       HomePage:AddLabel("Made by Ivar")
+       HomePage:AddBox("Item Spawner", function(Text)
+       local player = game.Players.LocalPlayer
+       local bag = game.ReplicatedStorage.Bag
+       local itemName = Text
+       bag:FireServer(itemName,'Players.'..player.Name..'.PlayerScripts.InvManager')
+        
+       end)
+       HomePage:AddToggle("Killaura", function(State)
+       wait(1)
+if State == true then
+while true do
+for i,v in pairs(game.Players:GetPlayers()) do
+if v ~= game.Players.LocalPlayer and pcall(function() return v.Character.Humanoid, v.Character.HumanoidRootPart.Position end) and game.Players.LocalPlayer:DistanceFromCharacter(v.Character.HumanoidRootPart.Position) < 50 then
+game.Players.LocalPlayer.ServerEvent:FireServer("dealDamage", v.Character.Humanoid, game.Players.LocalPlayer.Character["1"], 1)
+end
+end
+end
+else
+    end
+       end)
+   
+
+-- Misc Page
+MiscPage:AddButton("Infinite Armor", function()
+           local children = game.Players.LocalPlayer.Character.Newidwyr.Armor:GetChildren()
+for i, child in pairs(children) do
+    if child:IsA("NumberValue") then
+    child.Value = 60
+end
+end
+       end)
+MiscPage:AddButton("Instakill", function()
+local mt = getrawmetatable(game)
+local old = mt.__namecall
+setreadonly(mt, false)
+
+mt.__namecall = function(uh, ...)
+   local args = {...}
+   local method = getnamecallmethod()
+   if method == "FireServer" and args[1] == "dealDamage" or "dealEnduranceDamage" then
+       for i = 1,10 do
+           old(uh, ...)
+       end
+   end
+   return old(uh, ...)
+end
+
+setreadonly(mt, true)
+
+ end)
+     MiscPage:AddButton("Destroy GUI", function()
+           ShowerLib:Destroy() -- Kills the GUI
+       end)
+
+       MiscPage:AddBind("Close Keybind", Enum.KeyCode.F, function()
+           ShowerLib:OpenClose() -- opens or closes the UI
+       end)
+
+-- Credits Page
+CreditPage:AddLabel("Credits")
+CreditPage:AddLabel("Showerhead - UI Library")
+CreditPage:AddLabel("Ivar - Scripting")
+CreditPage:AddLabel("Nomrial - Scripting")
